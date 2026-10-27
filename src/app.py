@@ -25,37 +25,37 @@ activities = {
         "description": "Practice basketball skills and play team games",
         "schedule": "Mondays and Wednesdays, 3:30 PM - 5:00 PM",
         "max_participants": 15,
-        "participants": []
+        "participants": ["alex.morgan@mergington.edu", "jordan.lee@mergington.edu"]
     },
     "Volleyball Club": {
         "description": "Learn volleyball fundamentals and compete in friendly matches",
         "schedule": "Tuesdays, 3:30 PM - 5:00 PM",
         "max_participants": 14,
-        "participants": []
+        "participants": ["sam.rivera@mergington.edu", "taylor.chen@mergington.edu"]
     },
     "Art Studio": {
         "description": "Explore drawing, painting, and other visual art projects",
         "schedule": "Tuesdays, 3:30 PM - 5:00 PM",
         "max_participants": 16,
-        "participants": []
+        "participants": ["maya.patel@mergington.edu", "avery.brooks@mergington.edu"]
     },
     "Drama Club": {
         "description": "Act, rehearse, and help produce school performances",
         "schedule": "Thursdays, 3:30 PM - 5:00 PM",
         "max_participants": 20,
-        "participants": []
+        "participants": ["riley.parker@mergington.edu", "casey.nguyen@mergington.edu"]
     },
     "Debate Club": {
         "description": "Research topics and practice building persuasive arguments",
         "schedule": "Wednesdays, 3:30 PM - 4:30 PM",
         "max_participants": 18,
-        "participants": []
+        "participants": ["zoe.davis@mergington.edu", "ethan.wilson@mergington.edu"]
     },
     "Science Club": {
         "description": "Explore scientific questions through experiments and projects",
         "schedule": "Fridays, 3:30 PM - 4:30 PM",
         "max_participants": 16,
-        "participants": []
+        "participants": ["noah.kim@mergington.edu", "mia.garcia@mergington.edu"]
     }
 }
 
@@ -87,3 +87,17 @@ def signup_for_activity(activity_name: str, email: str):
     # Add student
     activity["participants"].append(email)
     return {"message": f"Signed up {email} for {activity_name}"}
+
+
+@app.delete("/activities/{activity_name}/unregister")
+def unregister_from_activity(activity_name: str, email: str):
+    """Unregister a student from an activity."""
+    if activity_name not in activities:
+        raise HTTPException(status_code=404, detail="Activity not found")
+
+    activity = activities[activity_name]
+    if email not in activity["participants"]:
+        raise HTTPException(status_code=404, detail="Student is not signed up for this activity")
+
+    activity["participants"].remove(email)
+    return {"message": f"Unregistered {email} from {activity_name}"}
